@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0B1020">
+  <meta name="description" content="Тренажёр французских IT fiches: системы, сети и безопасность. Вопросы на французском, разбор на русском.">
+  <title>IT Atelier — французский IT-тренажёр</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#question">Перейти к вопросу</a>
+  <header class="topbar"><a class="brand" href="./"><span class="brand-mark" aria-hidden="true">IT</span><span>Atelier<span class="brand-caption">Préparation · SYS / NET / SEC</span></span></a><div class="top-actions"><button id="export" class="quiet">Сохранить</button><button id="import-button" class="quiet">Загрузить</button><input id="import-file" type="file" accept="application/json,.json" hidden></div></header>
+  <main class="layout">
+    <aside class="sidebar" aria-label="Настройки и навигация">
+      <div class="section-label">ВАША ТРЕНИРОВКА</div>
+      <label for="mode">Режим</label><select id="mode"><option value="diagnostic">Диагностика · 12 вопросов</option><option value="quiz">Квиз · выбор вариантов</option><option value="practice">Практика · ситуации</option><option value="jury">Устное жюри</option></select>
+      <label for="topic">Тема</label><select id="topic"><option value="all">Все направления</option><option value="SYS">SYS · Системы</option><option value="NET">NET · Сети</option><option value="SEC">SEC · Безопасность</option></select>
+      <label for="count">Вопросов в серии</label><input id="count" type="number" min="1" max="50" value="12">
+      <button id="start" class="primary wide">Начать серию</button><p id="start-notice" class="small muted">Текущая попытка сохраняется при смене серии.</p>
+      <nav class="side-nav" aria-label="Журналы"><button data-panel="progress-panel">Прогресс и навыки</button><button data-panel="errors-panel">Журнал ошибок</button><button data-panel="sources-panel">Источники и уточнения</button></nav>
+      <div class="sidebar-foot">По материалам трёх fiches.<br>Учебный тренажёр, без таймера.</div>
+    </aside>
+    <div class="workspace">
+      <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+      <div class="heading-row"><div><div class="eyebrow">COMPRENDRE · APPLIQUER · EXPLIQUER</div><h1 id="series-title">Диагностика</h1></div><span class="pill" id="series-count">1 / 12</span></div>
+      <div class="progress-track" id="progress-track" role="progressbar" aria-label="Завершённые вопросы серии" aria-valuemin="0" aria-valuemax="12" aria-valuenow="0"><div id="progress-fill"></div></div>
+      <div class="coverage-row" id="coverage-row"></div>
+      <section id="question" class="question-card" aria-labelledby="question-title">
+        <div class="question-meta"><span id="question-topic" class="topic-badge">SYS-01</span><span id="question-kind">Открытый вопрос</span><span id="attempt-label" class="muted"></span></div>
+        <h2 id="question-title" lang="fr"></h2>
+        <p id="scenario" class="scenario" hidden></p>
+        <p id="question-source" class="source-line"></p>
+        <div id="rubric" class="rubric"></div>
+        <form id="answer-form">
+          <fieldset id="choices" hidden><legend id="choice-instructions">Выберите один ответ</legend><div id="choice-list"></div></fieldset>
+          <div id="open-answer"><label for="answer">Ваш ответ · по-французски или по-русски</label><textarea id="answer" rows="5" placeholder="Опишите мысль своими словами…"></textarea><p id="open-guide" class="small muted"></p></div>
+          <div class="confidence-box"><div class="confidence-heading"><label for="confidence">Насколько вы уверены?</label><output id="confidence-value" for="confidence">Не указана</output></div><input id="confidence" type="range" min="0" max="100" step="5" value="50"><div class="range-labels"><span>0% · не уверен</span><span>100% · полностью уверен</span></div><label class="checkbox-row"><input id="skip-confidence" type="checkbox"> Не указываю уверенность</label></div>
+          <p id="validation" class="validation" role="alert" hidden></p>
+          <div class="action-row"><button id="submit" type="submit" class="primary">Ответить</button><button id="hint" type="button">Подсказка</button><button id="reveal" type="button" class="quiet">Разбор без попытки</button></div>
+        </form>
+        <p id="hint-text" class="hint-box" hidden></p>
+        <section id="handoff" class="handoff" hidden aria-labelledby="handoff-title"><h3 id="handoff-title">Разбор свободного ответа в чате</h3><p>Этот сайт не оценивает свободный текст автоматически. Скопируйте запрос в этот чат вместе с исходными fiches. После разбора вставьте JSON оценки ниже.</p><textarea id="review-prompt" rows="6" readonly aria-label="Запрос для содержательного разбора"></textarea><button id="copy-prompt">Скопировать запрос</button><label for="review-json">JSON оценки из чата</label><textarea id="review-json" rows="4" placeholder='{"kind":"it-review", …}'></textarea><button id="apply-review">Применить разбор</button></section>
+        <section id="feedback" class="feedback" hidden aria-live="polite"></section>
+        <div class="next-row"><button id="next" class="primary" disabled>Следующий вопрос</button><span id="next-note" class="small muted">После завершения попытки</span></div>
+      </section>
+      <section id="summary" class="panel" hidden aria-labelledby="summary-title"><h2 id="summary-title">Итог серии</h2><div id="summary-content"></div><button id="repeat-errors">Повторить слабые темы</button></section>
+      <section id="progress-panel" class="panel" hidden><div class="panel-heading"><h2>Прогресс и навыки</h2><button data-close="progress-panel" class="quiet">Закрыть</button></div><div id="progress-content"></div></section>
+      <section id="errors-panel" class="panel" hidden><div class="panel-heading"><h2>Журнал ошибок</h2><button data-close="errors-panel" class="quiet">Закрыть</button></div><div id="errors-content"></div></section>
+      <section id="sources-panel" class="panel" hidden><div class="panel-heading"><h2>Источники и уточнения</h2><button data-close="sources-panel" class="quiet">Закрыть</button></div><p>Полностью прочитаны три документа, семь таблиц и четыре изображения. Они служат учебным корпусом и не являются официальным référentiel. Ссылки P обозначают порядковые XML-абзацы, включая пустые; это не страницы.</p><div id="sources-content"></div><p><a href="coverage.md">Полный реестр покрытия</a> · <a href="clarifications.md">Журнал технических уточнений</a></p></section>
+      <footer class="app-footer">Вопросы — на французском. Объяснения — на русском. Баллы тренировочные; они не означают готовность ко всему экзамену.<br>Прогресс хранится в этом браузере. Переносите его через «Сохранить» и «Загрузить».</footer>
+    </div>
+  </main>
+  <noscript>Для работы тренажёра включите JavaScript в браузере.</noscript>
+</body>
+</html>
