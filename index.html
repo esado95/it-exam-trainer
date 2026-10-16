@@ -7,8 +7,17 @@
   <meta name="description" content="Тренажёр французских IT fiches: системы, сети и безопасность. Вопросы на французском, разбор на русском.">
   <title>IT Atelier — французский IT-тренажёр</title>
   <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="IT Atelier">
   <link rel="stylesheet" href="styles.css">
   <script type="module" src="app.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => navigator.serviceWorker.register("service-worker.js"));
+    }
+  </script>
 </head>
 <body>
   <a class="skip" href="#question">Перейти к вопросу</a>

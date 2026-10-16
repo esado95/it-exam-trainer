@@ -1,0 +1,17 @@
+{
+  "name": "IT Atelier — французский IT-тренажёр",
+  "short_name": "IT Atelier",
+  "description": "Тренажёр французских IT fiches: системы, сети и безопасность. Вопросы на французском, разбор на русском.",
+  "id": "/it-exam-trainer/",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "lang": "ru",
+  "background_color": "#0B1020",
+  "theme_color": "#0B1020",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}
